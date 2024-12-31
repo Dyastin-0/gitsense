@@ -78,7 +78,6 @@ func Create(config *oauth2.Config, mongoClient *mongo.Client) http.HandlerFunc {
 		defer resp.Body.Close()
 
 		if resp.StatusCode != http.StatusCreated {
-			fmt.Println(resp.Status)
 			http.Error(w, fmt.Sprintf("GitHub API error: %s", resp.Status), http.StatusInternalServerError)
 			return
 		}
