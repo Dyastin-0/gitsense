@@ -12,8 +12,9 @@ import (
 func Auth(config *oauth2.Config, client *mongo.Client) chi.Router {
 	router := chi.NewRouter()
 
-	router.Post("/", auth.Handler(config))
-	router.Get("/callback", auth.Callback(config, client))
+	router.Post("/refresh", auth.Refresh(client))
+	router.Get("/github", auth.Handler(config))
+	router.Get("/github/callback", auth.Callback(config, client))
 
 	return router
 }

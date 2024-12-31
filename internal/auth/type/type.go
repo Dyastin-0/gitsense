@@ -6,7 +6,7 @@ import (
 
 type User struct {
 	ID       string `bson:"_id,omitempty"`
-	GithubID string `bson:"github_id"`
+	GithubID int    `bson:"github_id"`
 	Name     string `bson:"name"`
 	Email    string `bson:"email"`
 	Avatar   string `bson:"avatar_url"`

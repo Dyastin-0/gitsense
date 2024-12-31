@@ -48,12 +48,13 @@ func Callback(config *oauth2.Config, mongoClient *mongo.Client) http.HandlerFunc
 
 		user := usr.Type{}
 		if err := json.NewDecoder(response.Body).Decode(&user); err != nil {
+			fmt.Println(err)
 			http.Error(w, "Failed to parse user information", http.StatusInternalServerError)
 			return
 		}
 
 		collection := mongoClient.Database("test").Collection("users")
-		filter := bson.M{"githubID": user.GithubID}
+		filter := bson.M{"github_id": user.GithubID}
 
 		err = collection.FindOne(r.Context(), filter).Err()
 		if err == mongo.ErrNoDocuments {
@@ -96,7 +97,7 @@ func Callback(config *oauth2.Config, mongoClient *mongo.Client) http.HandlerFunc
 		})
 
 		redirectURL := os.Getenv("BASE_CLIENT_URL") + "/home"
-		http.Redirect(w, r, redirectURL, http.StatusTemporaryRedirect)
+		http.Redirect(w, r, redirectURL, http.StatusPermanentRedirect)
 
 	}
 }

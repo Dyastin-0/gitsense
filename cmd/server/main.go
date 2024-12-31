@@ -49,7 +49,7 @@ func main() {
 	mainRouter.Use(render.SetContentType(render.ContentTypeJSON))
 
 	version := os.Getenv("VERSION")
-	mainRouter.Mount("/"+version+"/auth", router.Auth(githubOAuthConfig, client))
+	mainRouter.Mount("/api/"+version+"/auth", router.Auth(githubOAuthConfig, client))
 
 	port := os.Getenv("PORT")
 	if err := http.ListenAndServe(":"+port, mainRouter); err != nil {

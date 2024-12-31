@@ -49,7 +49,7 @@ func Refresh(client *mongo.Client) http.HandlerFunc {
 				http.Error(w, "Forbidden", http.StatusForbidden)
 				return
 			}
-			_, err = collection.UpdateOne(context.Background(), bson.M{"email": claims.Subject}, bson.M{"$set": bson.M{"refresh_tokens": []string{}}})
+			_, err = collection.UpdateOne(context.Background(), bson.M{"email": claims.User.Email}, bson.M{"$set": bson.M{"refresh_tokens": []string{}}})
 			if err != nil {
 				http.Error(w, "Internal server error", http.StatusInternalServerError)
 				return
