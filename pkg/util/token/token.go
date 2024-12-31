@@ -12,10 +12,12 @@ import (
 func Generate(user *user.Type, secret string, expiration time.Duration) (string, error) {
 	claims := auth.Claims{
 		User: auth.User{
-			Name:     user.Name,
-			Email:    user.Email,
-			GithubID: user.GithubID,
-			ID:       user.ID,
+			Name:              user.Name,
+			Email:             user.Email,
+			GithubID:          user.GithubID,
+			GithubAccessToken: user.GithubAccessToken,
+			Login:             user.Login,
+			ID:                user.ID,
 		},
 		Exp: time.Now().Add(expiration).Unix(),
 		RegisteredClaims: jwt.RegisteredClaims{

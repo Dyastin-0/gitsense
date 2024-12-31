@@ -120,6 +120,7 @@ func Refresh(client *mongo.Client) http.HandlerFunc {
 				Name:   user.Name,
 				Email:  user.Email,
 				Avatar: user.Avatar,
+				Login:  user.Login,
 			},
 		}
 

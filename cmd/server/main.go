@@ -33,6 +33,7 @@ func main() {
 		Scopes: []string{
 			"user",
 			"repo",
+			"admin:repo_hook",
 		},
 		Endpoint: github.Endpoint,
 	}
@@ -50,6 +51,8 @@ func main() {
 
 	version := os.Getenv("VERSION")
 	mainRouter.Mount("/api/"+version+"/auth", router.Auth(githubOAuthConfig, client))
+	mainRouter.Mount("/api/"+version+"/repository", router.Repository(githubOAuthConfig, client))
+	mainRouter.Mount("/api/"+version+"/webhook", router.Webhook(githubOAuthConfig, client))
 
 	port := os.Getenv("PORT")
 	if err := http.ListenAndServe(":"+port, mainRouter); err != nil {
