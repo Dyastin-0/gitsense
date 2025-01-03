@@ -2,6 +2,7 @@ package callback
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"os"
 
@@ -21,6 +22,8 @@ func Handler(mongoClient *mongo.Client) http.HandlerFunc {
 		login := chi.URLParam(r, "username")
 		repository := chi.URLParam(r, "repository")
 		name := chi.URLParam(r, "name")
+
+		fmt.Println(login, repository, name)
 
 		webhook := webhook.Webhook{}
 

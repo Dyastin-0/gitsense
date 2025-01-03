@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"net"
+	"strings"
 
 	sshUtil "golang.org/x/crypto/ssh"
 )
@@ -13,6 +14,8 @@ func RunCommand(privateKey string, instanceIP string, hostKey string, user strin
 	if privateKey == "" || instanceIP == "" || user == "" || commands == "" {
 		return "", "", fmt.Errorf("missing required parameters")
 	}
+
+	privateKey = strings.ReplaceAll(privateKey, `\n`, "\n")
 
 	signer, err := sshUtil.ParsePrivateKey([]byte(privateKey))
 	if err != nil {
