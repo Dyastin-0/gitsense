@@ -48,6 +48,12 @@ func Create(config *oauth2.Config, mongoClient *mongo.Client) http.HandlerFunc {
 			return
 		}
 
+		req.Secret, err = hash.Generate(req.Secret)
+		if err != nil {
+			http.Error(w, "Failed to hash secret", http.StatusInternalServerError)
+			return
+		}
+
 		webhookPayloadURL := fmt.Sprintf("%s/api/v1/callback/%s/%s/hooks/%s", os.Getenv("BASE_SERVER_URL"), user.Login, req.Repository, req.Name)
 
 		webhookPayload := WebhookPayload{
@@ -86,12 +92,6 @@ func Create(config *oauth2.Config, mongoClient *mongo.Client) http.HandlerFunc {
 		req.SSH.PrivateKey, err = aes.Encrypt(req.SSH.PrivateKey, os.Getenv("ENCRYPTION_KEY"))
 		if err != nil {
 			http.Error(w, "Failed to encrypt private key", http.StatusInternalServerError)
-			return
-		}
-
-		req.Secret, err = hash.Generate(req.Secret)
-		if err != nil {
-			http.Error(w, "Failed to hash secret", http.StatusInternalServerError)
 			return
 		}
 
