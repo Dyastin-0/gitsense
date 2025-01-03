@@ -13,6 +13,8 @@ import (
 	"golang.org/x/oauth2"
 
 	types "github.com/Dyastin-0/gitsense/internal/auth/type"
+	"github.com/Dyastin-0/gitsense/pkg/util/aes"
+	"github.com/Dyastin-0/gitsense/pkg/util/hash"
 )
 
 func Create(config *oauth2.Config, mongoClient *mongo.Client) http.HandlerFunc {
@@ -68,7 +70,6 @@ func Create(config *oauth2.Config, mongoClient *mongo.Client) http.HandlerFunc {
 
 		client := config.Client(r.Context(), token)
 
-		fmt.Println(user.Login, req.Repository, req.Name)
 		webhookURL := fmt.Sprintf("%s/repos/%s/%s/hooks", os.Getenv("GITHUB_API_URL"), user.Login, req.Repository)
 		resp, err := client.Post(webhookURL, "application/json", bytes.NewBuffer(payloadBytes))
 		if err != nil {
@@ -82,11 +83,26 @@ func Create(config *oauth2.Config, mongoClient *mongo.Client) http.HandlerFunc {
 			return
 		}
 
+		req.SSH.PrivateKey, err = aes.Encrypt(req.SSH.PrivateKey, os.Getenv("ENCRYPTION_KEY"))
+		if err != nil {
+			http.Error(w, "Failed to encrypt private key", http.StatusInternalServerError)
+			return
+		}
+
+		req.Secret, err = hash.Generate(req.Secret)
+		if err != nil {
+			http.Error(w, "Failed to hash secret", http.StatusInternalServerError)
+			return
+		}
+
 		webhook := Webhook{
 			Name:           req.Name,
-			Created:        time.Now().Unix(),
+			Repository:     req.Repository,
+			Secret:         req.Secret,
 			Owner:          user.Login,
+			SSHconfig:      req.SSH,
 			WebhookPayload: webhookPayload,
+			Created:        time.Now().Unix(),
 		}
 
 		_, err = collection.InsertOne(r.Context(), webhook)

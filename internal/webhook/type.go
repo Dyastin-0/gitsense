@@ -1,10 +1,13 @@
 package webhook
 
 type Webhook struct {
-	Name           string         `json:"_id" bson:"_id"`
+	Name           string         `json:"name" bson:"name"`
 	Owner          string         `json:"owner" bson:"owner"`
+	Repository     string         `json:"repository" bson:"repository"`
+	Secret         string         `json:"secret" bson:"secret"`
 	Created        int64          `json:"created" bson:"created"`
-	WebhookPayload WebhookPayload `json:"config"`
+	SSHconfig      sshConfig      `json:"ssh" bson:"ssh"`
+	WebhookPayload WebhookPayload `json:"config" bson:"config"`
 }
 
 type WebhookPayload struct {
@@ -22,7 +25,15 @@ type WebhookConfig struct {
 }
 
 type RequestBody struct {
-	Name       string `json:"name" bson:"name"`
-	Repository string `json:"repository" bson:"repository"`
-	Secret     string `json:"secret" bson:"secret"`
+	Name       string    `json:"name" bson:"name"`
+	Repository string    `json:"repository" bson:"repository"`
+	Secret     string    `json:"secret" bson:"secret"`
+	SSH        sshConfig `json:"ssh" bson:"ssh"`
+}
+
+type sshConfig struct {
+	IPadress   string `json:"ip_address" bson:"ip_address"`
+	User       string `json:"user" bson:"user"`
+	HostKey    string `json:"host_key" bson:"host_key"`
+	PrivateKey string `json:"private_key" bson:"private_key"`
 }
