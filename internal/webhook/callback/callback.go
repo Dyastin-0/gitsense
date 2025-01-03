@@ -18,7 +18,6 @@ import (
 
 func Handler(mongoClient *mongo.Client) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
 		login := chi.URLParam(r, "username")
 		repository := chi.URLParam(r, "repository")
 		name := chi.URLParam(r, "name")
