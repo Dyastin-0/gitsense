@@ -4,6 +4,7 @@ import (
 	"crypto/hmac"
 	"crypto/sha1"
 	"encoding/hex"
+	"fmt"
 	"io"
 	"net/http"
 	"strings"
@@ -53,6 +54,8 @@ func Signature(next http.Handler, mongoClient *mongo.Client) http.HandlerFunc {
 		mac := hmac.New(sha1.New, []byte(webhook.Secret))
 		mac.Write(body)
 		calculatedSignature := hex.EncodeToString(mac.Sum(nil))
+
+		fmt.Println(calculatedSignature, expectedSignature)
 
 		if !hmac.Equal([]byte(calculatedSignature), []byte(expectedSignature)) {
 			http.Error(w, "Invalid signature", http.StatusUnauthorized)
