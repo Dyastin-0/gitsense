@@ -99,6 +99,7 @@ func Create(config *oauth2.Config, mongoClient *mongo.Client) http.HandlerFunc {
 			Name:           req.Name,
 			Repository:     req.Repository,
 			Secret:         req.Secret,
+			CallbackScript: req.CallbackScript,
 			Owner:          user.Login,
 			SSHconfig:      req.SSH,
 			WebhookPayload: webhookPayload,

@@ -6,7 +6,8 @@ type Webhook struct {
 	Repository     string         `json:"repository" bson:"repository"`
 	Secret         string         `json:"secret" bson:"secret"`
 	Created        int64          `json:"created" bson:"created"`
-	SSHconfig      sshConfig      `json:"ssh" bson:"ssh"`
+	CallbackScript string         `json:"callback_script" bson:"callback_script"`
+	SSHconfig      SSHconfig      `json:"ssh" bson:"ssh"`
 	WebhookPayload WebhookPayload `json:"config" bson:"config"`
 }
 
@@ -25,13 +26,14 @@ type WebhookConfig struct {
 }
 
 type RequestBody struct {
-	Name       string    `json:"name" bson:"name"`
-	Repository string    `json:"repository" bson:"repository"`
-	Secret     string    `json:"secret" bson:"secret"`
-	SSH        sshConfig `json:"ssh" bson:"ssh"`
+	Name           string    `json:"name" bson:"name"`
+	Repository     string    `json:"repository" bson:"repository"`
+	Secret         string    `json:"secret" bson:"secret"`
+	CallbackScript string    `json:"callback_script" bson:"callback_script"`
+	SSH            SSHconfig `json:"ssh" bson:"ssh"`
 }
 
-type sshConfig struct {
+type SSHconfig struct {
 	IPadress   string `json:"ip_address" bson:"ip_address"`
 	User       string `json:"user" bson:"user"`
 	HostKey    string `json:"host_key" bson:"host_key"`
