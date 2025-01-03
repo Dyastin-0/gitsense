@@ -8,7 +8,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 
-	types "github.com/Dyastin-0/gitsense/internal/auth/type"
 	"github.com/Dyastin-0/gitsense/pkg/util/aes"
 	"github.com/Dyastin-0/gitsense/pkg/util/ssh"
 	"github.com/go-chi/chi/v5"
@@ -18,21 +17,15 @@ import (
 
 func Handler(mongoClient *mongo.Client) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		claims, ok := r.Context().Value("claims").(*types.Claims)
-		if !ok || claims == nil {
-			http.Error(w, "Unauthorized", http.StatusUnauthorized)
-			return
-		}
 
-		user := claims.User
-
+		login := chi.URLParam(r, "username")
 		repository := chi.URLParam(r, "repository")
 		name := chi.URLParam(r, "name")
 
 		webhook := webhook.Webhook{}
 
 		collection := mongoClient.Database("test").Collection("webhooks")
-		filter := bson.M{"owner": user.Login, "repository": repository, "name": name}
+		filter := bson.M{"owner": login, "repository": repository, "name": name}
 
 		err := collection.FindOne(r.Context(), filter).Decode(&webhook)
 		if err != nil {

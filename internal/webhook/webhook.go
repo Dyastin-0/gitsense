@@ -48,7 +48,7 @@ func Create(config *oauth2.Config, mongoClient *mongo.Client) http.HandlerFunc {
 			return
 		}
 
-		webhookPayloadURL := fmt.Sprintf("%s/callback/%s/%s/hooks/%s", os.Getenv("BASE_SERVER_URL"), user.Login, req.Repository, req.Name)
+		webhookPayloadURL := fmt.Sprintf("%s/api/v1/callback/%s/%s/hooks/%s", os.Getenv("BASE_SERVER_URL"), user.Login, req.Repository, req.Name)
 
 		webhookPayload := WebhookPayload{
 			Name:   "web",
