@@ -1,7 +1,7 @@
 package callback
 
 import (
-	"encoding/json"
+	"context"
 	"fmt"
 	"net/http"
 	"os"
@@ -22,41 +22,42 @@ func Handler(mongoClient *mongo.Client) http.HandlerFunc {
 		repository := chi.URLParam(r, "repository")
 		name := chi.URLParam(r, "name")
 
-		fmt.Println(login, repository, name)
+		go processWebhook(&Job{
+			Owner:      login,
+			Repository: repository,
+			Name:       name,
+		}, mongoClient)
 
-		webhook := webhook.Webhook{}
+		w.WriteHeader(http.StatusAccepted)
+	}
+}
 
-		collection := mongoClient.Database("test").Collection("webhooks")
-		filter := bson.M{"owner": login, "repository": repository, "name": name}
+func processWebhook(job *Job, mongoClient *mongo.Client) {
+	webhook := webhook.Webhook{}
 
-		err := collection.FindOne(r.Context(), filter).Decode(&webhook)
-		if err != nil {
-			http.Error(w, "Webhook not found", http.StatusNotFound)
-			return
-		}
+	collection := mongoClient.Database("test").Collection("webhooks")
+	filter := bson.M{"owner": job.Owner, "repository": job.Repository, "name": job.Name}
 
-		decodedPrivateKey, err := aes.Decrypt(webhook.SSHconfig.PrivateKey, os.Getenv("ENCRYPTION_KEY"))
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
+	err := collection.FindOne(context.Background(), filter).Decode(&webhook)
+	if err != nil {
+		fmt.Println(fmt.Errorf("error decoding webhook: %v", err))
+		return
+	}
 
-		stdout, stderr, err := ssh.RunCommand(decodedPrivateKey,
-			webhook.SSHconfig.IPadress,
-			webhook.SSHconfig.HostKey,
-			webhook.SSHconfig.User,
-			webhook.CallbackScript,
-		)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
+	decodedPrivateKey, err := aes.Decrypt(webhook.SSHconfig.PrivateKey, os.Getenv("ENCRYPTION_KEY"))
+	if err != nil {
+		fmt.Println(fmt.Errorf("error decrypting private key: %v", err))
+		return
+	}
 
-		response := Response{
-			Stdout: stdout,
-			Stderr: stderr,
-		}
-
-		json.NewEncoder(w).Encode(response)
+	_, _, err = ssh.RunCommand(decodedPrivateKey,
+		webhook.SSHconfig.IPadress,
+		webhook.SSHconfig.HostKey,
+		webhook.SSHconfig.User,
+		webhook.CallbackScript,
+	)
+	if err != nil {
+		fmt.Println(fmt.Errorf("error running command: %v", err))
+		return
 	}
 }
