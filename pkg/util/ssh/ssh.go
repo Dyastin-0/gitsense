@@ -66,6 +66,6 @@ func verifyHostKey(hostKey string) func(hostname string, remote net.Addr, key ss
 			return nil
 		}
 
-		return fmt.Errorf("host key mismatch: expected %s, got %s", hostKey, key.Marshal())
+		return fmt.Errorf("host key mismatch: expected %s, got %s", hostKey, base64.StdEncoding.EncodeToString(key.Marshal()))
 	}
 }
