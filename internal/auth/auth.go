@@ -10,8 +10,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/oauth2"
 
-	usr "gitsense/internal/type/user"
-	tken "gitsense/pkg/util/token"
+	usr "github.com/Dyastin-0/gitsense/internal/type/user"
+	tken "github.com/Dyastin-0/gitsense/pkg/util/token"
 )
 
 func Handler(config *oauth2.Config) http.HandlerFunc {

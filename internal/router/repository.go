@@ -6,8 +6,8 @@ import (
 
 	"golang.org/x/oauth2"
 
-	middleware "gitsense/internal/middleware"
-	repository "gitsense/internal/repository"
+	middleware "github.com/Dyastin-0/gitsense/internal/middleware"
+	repository "github.com/Dyastin-0/gitsense/internal/repository"
 )
 
 func Repository(config *oauth2.Config, client *mongo.Client) chi.Router {

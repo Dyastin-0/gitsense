@@ -5,8 +5,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/oauth2"
 
-	"gitsense/internal/middleware"
-	webhook "gitsense/internal/webhook"
+	"github.com/Dyastin-0/gitsense/internal/middleware"
+	webhook "github.com/Dyastin-0/gitsense/internal/webhook"
 )
 
 func Webhook(config *oauth2.Config, mongoClient *mongo.Client) chi.Router {

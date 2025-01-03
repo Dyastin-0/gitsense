@@ -3,7 +3,7 @@ package middleware
 import (
 	"net/http"
 
-	"gitsense/internal/config"
+	"github.com/Dyastin-0/gitsense/internal/config"
 )
 
 func Credential(next http.Handler) http.Handler {

@@ -8,7 +8,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 
-	types "gitsense/internal/auth/type"
+	types "github.com/Dyastin-0/gitsense/internal/auth/type"
 )
 
 func JWT(next http.Handler) http.Handler {

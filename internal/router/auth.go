@@ -6,7 +6,7 @@ import (
 
 	"golang.org/x/oauth2"
 
-	auth "gitsense/internal/auth"
+	auth "github.com/Dyastin-0/gitsense/internal/auth"
 )
 
 func Auth(config *oauth2.Config, client *mongo.Client) chi.Router {

@@ -5,8 +5,8 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 
-	auth "gitsense/internal/auth/type"
-	user "gitsense/internal/type/user"
+	auth "github.com/Dyastin-0/gitsense/internal/auth/type"
+	user "github.com/Dyastin-0/gitsense/internal/type/user"
 )
 
 func Generate(user *user.Type, secret string, expiration time.Duration) (string, error) {

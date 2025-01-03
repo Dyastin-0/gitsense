@@ -16,8 +16,9 @@ import (
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/github"
 
-	middleware "gitsense/internal/middleware"
-	router "gitsense/internal/router"
+	router "github.com/Dyastin-0/gitsense/internal/router"
+
+	middleware "github.com/Dyastin-0/gitsense/internal/middleware"
 )
 
 func main() {

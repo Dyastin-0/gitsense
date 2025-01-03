@@ -2,5 +2,5 @@ package config
 
 var AllowedOrigins = []string{
 	"http://localhost:5173",
-	"https://gitsense.dyastin.tech",
+	"https://github.com/Dyastin-0/gitsense.dyastin.tech",
 }

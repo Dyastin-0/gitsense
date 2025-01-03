@@ -11,9 +11,9 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 
-	auth "gitsense/internal/auth/type"
-	user "gitsense/internal/type/user"
-	token "gitsense/pkg/util/token"
+	auth "github.com/Dyastin-0/gitsense/internal/auth/type"
+	user "github.com/Dyastin-0/gitsense/internal/type/user"
+	token "github.com/Dyastin-0/gitsense/pkg/util/token"
 )
 
 func Refresh(client *mongo.Client) http.HandlerFunc {

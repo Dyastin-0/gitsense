@@ -1,4 +1,4 @@
-module gitsense
+module github.com/Dyastin-0/gitsense
 
 go 1.23.4
 

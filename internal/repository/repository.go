@@ -9,7 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/oauth2"
 
-	types "gitsense/internal/auth/type"
+	types "github.com/Dyastin-0/gitsense/internal/auth/type"
 )
 
 func Get(config *oauth2.Config, mongoClient *mongo.Client) http.HandlerFunc {
