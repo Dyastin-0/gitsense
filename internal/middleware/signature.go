@@ -2,18 +2,17 @@ package middleware
 
 import (
 	"crypto/hmac"
-	"crypto/sha1"
+	"crypto/sha256"
 	"encoding/hex"
-	"fmt"
+	"fmt" // For debugging
 	"io"
 	"net/http"
 	"strings"
 
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-
 	"github.com/Dyastin-0/gitsense/internal/webhook"
 	"github.com/go-chi/chi/v5"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func Signature(next http.Handler, mongoClient *mongo.Client) http.HandlerFunc {
@@ -28,34 +27,38 @@ func Signature(next http.Handler, mongoClient *mongo.Client) http.HandlerFunc {
 			return
 		}
 
-		signatureHeader := r.Header.Get("X-Hub-Signature")
+		fmt.Println("Request body:", string(body))
+
+		signatureHeader := r.Header.Get("X-Hub-Signature-256")
 		if signatureHeader == "" {
 			http.Error(w, "Missing signature header", http.StatusUnauthorized)
 			return
 		}
 
 		parts := strings.Split(signatureHeader, "=")
-		if len(parts) != 2 || parts[0] != "sha1" {
+		if len(parts) != 2 || parts[0] != "sha256" {
 			http.Error(w, "Invalid signature format", http.StatusUnauthorized)
 			return
 		}
-
 		expectedSignature := parts[1]
 
 		collection := mongoClient.Database("test").Collection("webhooks")
 		filter := bson.M{"owner": login, "repository": repository, "name": name}
-		webhook := webhook.Webhook{}
+		var webhook webhook.Webhook
 		err = collection.FindOne(r.Context(), filter).Decode(&webhook)
 		if err != nil {
 			http.Error(w, "Webhook not found", http.StatusNotFound)
 			return
 		}
 
-		mac := hmac.New(sha1.New, []byte(webhook.Secret))
+		fmt.Println("Fetched Secret:", webhook.Secret)
+
+		mac := hmac.New(sha256.New, []byte(webhook.Secret))
 		mac.Write(body)
 		calculatedSignature := hex.EncodeToString(mac.Sum(nil))
 
-		fmt.Println(calculatedSignature, expectedSignature)
+		fmt.Println("Calculated Signature:", calculatedSignature)
+		fmt.Println("Expected Signature:", expectedSignature)
 
 		if !hmac.Equal([]byte(calculatedSignature), []byte(expectedSignature)) {
 			http.Error(w, "Invalid signature", http.StatusUnauthorized)
