@@ -39,6 +39,11 @@ func Create(config *oauth2.Config, mongoClient *mongo.Client) http.HandlerFunc {
 			return
 		}
 
+		if missingRequiredFields(&req) {
+			http.Error(w, "Missing required fields", http.StatusBadRequest)
+			return
+		}
+
 		collection := mongoClient.Database("test").Collection("webhooks")
 		filter := bson.M{"name": req.Name, "owner": user.Login}
 		err = collection.FindOne(r.Context(), filter).Decode(&Webhook{})
@@ -114,4 +119,8 @@ func Create(config *oauth2.Config, mongoClient *mongo.Client) http.HandlerFunc {
 
 		w.WriteHeader(http.StatusCreated)
 	}
+}
+
+func missingRequiredFields(req *RequestBody) bool {
+	return req.Name == "" || req.Repository == "" || req.Secret == "" || req.CallbackScript == "" || req.SSH.PrivateKey == "" || req.SSH.IPadress == "" || req.SSH.HostKey == "" || req.SSH.User == ""
 }
