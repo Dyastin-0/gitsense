@@ -24,7 +24,7 @@ GitHub repositories.
 #### Clone the repository
 
 ```shell
-git clone https://github.com/yourusername/gitsense.git
+git clone https://github.com/Dyastin-0/gitsense.git
 ```
 
 #### Navigate to the directory
