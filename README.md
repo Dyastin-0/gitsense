@@ -1,6 +1,6 @@
 ## Gitsense
 
-Gitsense is a lightweight tool designed for GitHub users who want to automate custom actions
+Gitsense is a simple tool designed for GitHub users who want to automate custom actions
 triggered by webhooks. While it’s not a full-fledged deployment tool, Gitsense provides
 a straightforward way to execute scripts remotely over SSH whenever certain events occur in your
 GitHub repositories.
@@ -42,7 +42,7 @@ If you are familiar with these tools, consider using it. Create a Caddyfile:
 sudo nano /etc/caddy/Caddyfile
 ```
 
-```json
+```
 <your_domain_name> {
     handle {
         reverse_proxy localhost:3000
