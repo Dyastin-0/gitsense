@@ -190,7 +190,7 @@ Once Gitsense is up and running, you can create webhooks for your GitHub reposit
 
 ### Development Mode
 
-To run on development mode, make sure you got ```air``` installed, on gitsense's root directory execute:
+To run on development mode, make sure you got ```air``` installed, on ```gitsense```'s root directory execute:
 
 ```shell
 air
