@@ -64,7 +64,7 @@ func Create(config *oauth2.Config, mongoClient *mongo.Client) http.HandlerFunc {
 		webhookPayload := WebhookPayload{
 			Name:   "web",
 			Active: true,
-			Events: []string{"push"},
+			Events: req.Events,
 			Config: WebhookConfig{
 				URL:         webhookPayloadURL,
 				ContentType: "json",

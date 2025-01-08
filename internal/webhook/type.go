@@ -29,6 +29,7 @@ type RequestBody struct {
 	Name           string    `json:"name" bson:"name"`
 	Repository     string    `json:"repository" bson:"repository"`
 	Secret         string    `json:"secret" bson:"secret"`
+	Events         []string  `json:"events" bson:"events"`
 	CallbackScript string    `json:"callback_script" bson:"callback_script"`
 	SSH            SSHconfig `json:"ssh" bson:"ssh"`
 }
