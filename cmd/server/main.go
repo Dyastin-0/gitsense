@@ -55,7 +55,7 @@ func main() {
 	mainRouter.Mount("/api/"+version+"/repository", router.Repository(githubOAuthConfig, client))
 	mainRouter.Mount("/api/"+version+"/webhook", router.Webhook(githubOAuthConfig, client))
 	mainRouter.Mount("/api/"+version+"/callback", router.Callback(client))
-	mainRouter.Mount("/api/"+version+"/output", router.Output(client))
+	mainRouter.Mount("/api/"+version+"/event", router.Output(client))
 
 	port := os.Getenv("PORT")
 	if err := http.ListenAndServe(":"+port, mainRouter); err != nil {

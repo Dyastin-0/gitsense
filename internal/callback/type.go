@@ -12,8 +12,10 @@ type Job struct {
 }
 
 type Output struct {
-	Stdout  string `json:"stdout"`
-	Stderr  string `json:"stderr"`
-	Webhook string `json:"webhook"`
-	Owner   string `json:"owner"`
+	ID        string `json:"id" bson:"_id"`
+	Stdout    string `json:"stdout"`
+	Stderr    string `json:"stderr"`
+	Webhook   string `json:"webhook"`
+	Owner     string `json:"owner"`
+	Timestamp int64  `json:"timestamp"`
 }

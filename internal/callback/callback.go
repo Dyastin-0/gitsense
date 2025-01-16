@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -65,10 +66,11 @@ func processWebhook(job *Job, mongoClient *mongo.Client) {
 	}
 
 	output := Output{
-		Stdout:  stdout,
-		Stderr:  stderr,
-		Webhook: job.Name,
-		Owner:   job.Owner,
+		Stdout:    stdout,
+		Stderr:    stderr,
+		Webhook:   job.Name,
+		Owner:     job.Owner,
+		Timestamp: time.Now().Unix(),
 	}
 
 	_, err = collection.InsertOne(context.Background(), output)
