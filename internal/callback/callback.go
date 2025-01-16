@@ -27,14 +27,13 @@ func Handler(mongoClient *mongo.Client) http.HandlerFunc {
 			Repository: repository,
 			Name:       name,
 		}, mongoClient,
-			r.Context(),
 		)
 
 		w.WriteHeader(http.StatusAccepted)
 	}
 }
 
-func processWebhook(job *Job, mongoClient *mongo.Client, ctx context.Context) {
+func processWebhook(job *Job, mongoClient *mongo.Client) {
 	webhook := webhook.Webhook{}
 
 	collection := mongoClient.Database("test").Collection("webhooks")
@@ -72,7 +71,7 @@ func processWebhook(job *Job, mongoClient *mongo.Client, ctx context.Context) {
 		Owner:   job.Owner,
 	}
 
-	_, err = collection.InsertOne(ctx, output)
+	_, err = collection.InsertOne(context.Background(), output)
 	if err != nil {
 		fmt.Println(fmt.Errorf("error inserting output: %v", err))
 		return
