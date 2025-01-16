@@ -12,7 +12,7 @@ type Job struct {
 }
 
 type Output struct {
-	ID        string `json:"id" bson:"_id"`
+	ID        string `json:"_id" bson:"_id,omitempty"`
 	Stdout    string `json:"stdout"`
 	Stderr    string `json:"stderr"`
 	Webhook   string `json:"webhook"`
