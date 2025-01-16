@@ -4,8 +4,8 @@ import (
 	"github.com/go-chi/chi/v5"
 	"go.mongodb.org/mongo-driver/mongo"
 
+	callback "github.com/Dyastin-0/gitsense/internal/callback"
 	"github.com/Dyastin-0/gitsense/internal/middleware"
-	callback "github.com/Dyastin-0/gitsense/internal/webhook/callback"
 )
 
 func Callback(client *mongo.Client) chi.Router {
