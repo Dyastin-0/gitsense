@@ -26,13 +26,15 @@ func Handler(mongoClient *mongo.Client) http.HandlerFunc {
 			Owner:      login,
 			Repository: repository,
 			Name:       name,
-		}, mongoClient)
+		}, mongoClient,
+			r.Context(),
+		)
 
 		w.WriteHeader(http.StatusAccepted)
 	}
 }
 
-func processWebhook(job *Job, mongoClient *mongo.Client) {
+func processWebhook(job *Job, mongoClient *mongo.Client, ctx context.Context) {
 	webhook := webhook.Webhook{}
 
 	collection := mongoClient.Database("test").Collection("webhooks")
@@ -50,7 +52,9 @@ func processWebhook(job *Job, mongoClient *mongo.Client) {
 		return
 	}
 
-	_, _, err = ssh.RunCommand(decodedPrivateKey,
+	collection = mongoClient.Database("test").Collection("outputs")
+
+	stdout, stderr, err := ssh.RunCommand(decodedPrivateKey,
 		webhook.SSHconfig.IPadress,
 		webhook.SSHconfig.HostKey,
 		webhook.SSHconfig.User,
@@ -58,6 +62,19 @@ func processWebhook(job *Job, mongoClient *mongo.Client) {
 	)
 	if err != nil {
 		fmt.Println(fmt.Errorf("error running command: %v", err))
+		return
+	}
+
+	output := Output{
+		Stdout:  stdout,
+		Stderr:  stderr,
+		Webhook: job.Name,
+		Owner:   job.Owner,
+	}
+
+	_, err = collection.InsertOne(ctx, output)
+	if err != nil {
+		fmt.Println(fmt.Errorf("error inserting output: %v", err))
 		return
 	}
 }
