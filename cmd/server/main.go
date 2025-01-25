@@ -50,12 +50,11 @@ func main() {
 	mainRouter.Use(middleware.Credential)
 	mainRouter.Use(render.SetContentType(render.ContentTypeJSON))
 
-	version := os.Getenv("VERSION")
-	mainRouter.Mount("/api/"+version+"/auth", router.Auth(githubOAuthConfig, client))
-	mainRouter.Mount("/api/"+version+"/repository", router.Repository(githubOAuthConfig, client))
-	mainRouter.Mount("/api/"+version+"/webhook", router.Webhook(githubOAuthConfig, client))
-	mainRouter.Mount("/api/"+version+"/callback", router.Callback(client))
-	mainRouter.Mount("/api/"+version+"/event", router.Output(client))
+	mainRouter.Mount("/auth", router.Auth(githubOAuthConfig, client))
+	mainRouter.Mount("/repository", router.Repository(githubOAuthConfig, client))
+	mainRouter.Mount("/webhook", router.Webhook(githubOAuthConfig, client))
+	mainRouter.Mount("/callback", router.Callback(client))
+	mainRouter.Mount("/event", router.Event(client))
 
 	port := os.Getenv("PORT")
 	if err := http.ListenAndServe(":"+port, mainRouter); err != nil {

@@ -8,7 +8,7 @@ import (
 	"github.com/Dyastin-0/gitsense/internal/middleware"
 )
 
-func Output(client *mongo.Client) chi.Router {
+func Event(client *mongo.Client) chi.Router {
 	router := chi.NewRouter()
 
 	router.Use(middleware.JWT)
